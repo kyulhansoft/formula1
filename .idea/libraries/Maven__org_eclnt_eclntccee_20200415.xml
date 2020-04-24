@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.eclnt:eclntccee:20200415">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclnt/eclntccee/20200415/eclntccee-20200415.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclnt/eclntccee/20200415/eclntccee-20200415-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclnt/eclntccee/20200415/eclntccee-20200415-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

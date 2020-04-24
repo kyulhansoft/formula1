@@ -1,0 +1,3 @@
+<path-to-server>
+    {resources} -> server/{project}/WEB-INF/classes
+</path-to-server>
