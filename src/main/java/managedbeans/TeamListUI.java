@@ -62,7 +62,18 @@ public class TeamListUI extends PageBean implements Serializable {
                     m_teamDetailsUI = null;
                 }
             };
-            m_teamDetailsUI.prepare(t, listener);
+            m_teamDetailsUI.prepare(t, listener, new TeamDetailsUI.IListener() {
+                @Override
+                public void reactOnOK(Team team) {
+                    // delete item
+                    m_grid.getItems().remove(item);
+                    m_teamDetailsUI = null;
+                }
+                @Override
+                public void reactOnCancel() {
+                    m_teamDetailsUI = null;
+                }
+            });
             // m_teamDetailsUI.setTeam(item.getTeam());
         } catch (CloneNotSupportedException e) {
             System.out.println(e.getMessage());
@@ -74,14 +85,19 @@ public class TeamListUI extends PageBean implements Serializable {
         TeamDetailsUI.IListener listener = new TeamDetailsUI.IListener() {
             @Override
             public void reactOnOK(Team team) {
+                Logic logic = new Logic();
+                logic.addTeam(team);
                 closePopup(teamDetailsUI);
+                GridItem newItem = new GridItem();
+                newItem.setTeam(team);
+                m_grid.getItems().add(newItem);
             }
             @Override
             public void reactOnCancel() {
                 closePopup(teamDetailsUI);
             }
         };
-        teamDetailsUI.prepare(null, listener);
+        teamDetailsUI.prepare(new Team(), listener, null);
 
         ModalPopup.IModalPopupListener listener2 = new ModalPopup.IModalPopupListener() {
             @Override
@@ -106,6 +122,9 @@ public class TeamListUI extends PageBean implements Serializable {
     // ------------------------------------------------------------------------
     
     private IListener m_listener;
+    private void loadGridFromDatabase() {
+
+    }
     
     // ------------------------------------------------------------------------
     // constructors & initialization

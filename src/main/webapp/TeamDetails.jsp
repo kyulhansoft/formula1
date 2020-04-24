@@ -13,9 +13,9 @@
 <f:subview id="TeamDetailsg_sv">
 <t:beanprocessing id="g_2" beanbinding="#{d.TeamDetailsUI}" />
 <t:rowheader id="g_3" coldistance="5" padding="left:20;top:7;bottom:7" >
-<t:button id="g_4" actionListener="#{d.TeamDetailsUI.onOKAction}" text="Save" width="100+" />
+<t:button id="g_4" actionListener="#{d.TeamDetailsUI.onSaveAction}" text="Save" width="100+" />
 <t:coldistance id="g_1" />
-<t:button id="g_16" enabled="#{d.TeamDetailsUI.btnDelEnabled}" text="Delete" width="100" />
+<t:button id="g_16" actionListener="#{d.TeamDetailsUI.onDeleteAction}" enabled="#{d.TeamDetailsUI.btnDelEnabled}" text="Delete" width="100" />
 <t:coldistance id="g_5" />
 <t:button id="g_6" actionListener="#{d.TeamDetailsUI.onCancelAction}" text="Cancel" width="100+" />
 </t:rowheader>

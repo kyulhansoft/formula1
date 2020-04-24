@@ -1,8 +1,12 @@
 package managedbeans;
 
 import java.io.Serializable;
+
+import jpapersistence.Logic;
 import org.eclnt.editor.annotations.CCGenClass;
+import org.eclnt.jsfserver.defaultscreens.OKPopup;
 import org.eclnt.jsfserver.defaultscreens.Statusbar;
+import org.eclnt.jsfserver.defaultscreens.YESNOPopup;
 import org.eclnt.jsfserver.pagebean.PageBean;
 
 import javax.faces.event.ActionEvent;
@@ -33,6 +37,7 @@ public class TeamDetailsUI extends PageBean implements Serializable {
     // ------------------------------------------------------------------------
     
     private IListener m_listener;
+    private IListener m_deleteListener;
     String m_btnDelEnabled = "false";
     
     // ------------------------------------------------------------------------
@@ -50,12 +55,13 @@ public class TeamDetailsUI extends PageBean implements Serializable {
     // ------------------------------------------------------------------------
 
     /* Initialization of the bean. Add any parameter that is required within your scenario. */
-    public void prepare(Team team, IListener listener) {
+    public void prepare(Team team, IListener listener, IListener deleteListener) {
         this.team = team;
         m_listener = listener;
         if (team != null) {
             setBtnDelEnabled("true");
         }
+        m_deleteListener = deleteListener;
     }
 
     public void onCancelAction(javax.faces.event.ActionEvent event) {
@@ -64,7 +70,7 @@ public class TeamDetailsUI extends PageBean implements Serializable {
         }
     }
 
-    public void onOKAction(javax.faces.event.ActionEvent event) {
+    public void onSaveAction(javax.faces.event.ActionEvent event) {
         if (m_listener != null) {
             m_listener.reactOnOK(this.team);
         }
@@ -72,6 +78,23 @@ public class TeamDetailsUI extends PageBean implements Serializable {
 
     public String getBtnDelEnabled() { return m_btnDelEnabled; }
     public void setBtnDelEnabled(String value) { m_btnDelEnabled = value; }
+
+    public void onDeleteAction(javax.faces.event.ActionEvent event) {
+        Team t = this.team;
+        YESNOPopup.createInstance("Be careful!", "Please confirm deleting by pressing YES.",
+            new YESNOPopup.IYesNoListener() {
+                @Override
+                public void reactOnYes() {
+                    Logic logic = new Logic();
+                    logic.deleteTeam(t);
+                    m_deleteListener.reactOnOK(t);
+                }
+                @Override
+                public void reactOnNo() {
+                    Statusbar.outputAlert("NO");
+                }
+            });
+    }
 
     // ------------------------------------------------------------------------
     // private usage

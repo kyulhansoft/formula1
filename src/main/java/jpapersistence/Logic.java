@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -53,6 +54,16 @@ public class Logic {
         //     m_grid.getItems().add(gridItem);
         // });
     }
+
+    public Team getTeam(UUID id) {
+		return m_em.find(Team.class, id);
+	}
+
+    public void addTeam(Team team) {
+		beginTransaction();
+		m_em.persist(team);
+		commit();
+	}
     
     public void saveTeam(Team team) {
 		// LocalDateTime now = LocalDateTime.now();
@@ -79,7 +90,8 @@ public class Logic {
 
     public void deleteTeam(Team team) {
 		beginTransaction();
-		m_em.remove(team);
+		Team t = m_em.find(Team.class, team.getId());
+		m_em.remove(t);
 		commit();
 	}
 }
