@@ -23,11 +23,11 @@
 <t:pane id="g_9" height="100%" padding="20" rowdistance="13" width="100%" >
 <t:row id="g_10" >
 <t:label id="g_11" text="Name" width="100" />
-<t:field id="g_12" bgpaint="#{d.TeamDetailsUI.cis.name.bgPaint}" border="#{d.TeamDetailsUI.cis.name.border}" text="#{d.TeamDetailsUI.team.name}" tooltip="#{d.TeamDetailsUI.cis.name.tooltip}" width="100%" />
+<t:field id="g_12" attributemacro="CISMacro()" text="#{d.TeamDetailsUI.team.name}" width="100%" />
 </t:row>
 <t:row id="g_13" >
 <t:label id="g_14" text="Established" width="100" />
-<t:calendarfield id="g_15" bgpaint="#{d.TeamDetailsUI.cis.established.bgPaint}" border="#{d.TeamDetailsUI.cis.established.border}" timezone="LOCAL" tooltip="#{d.TeamDetailsUI.cis.established.tooltip}" value="#{d.TeamDetailsUI.team.established}" width="100" />
+<t:calendarfield id="g_15" attributemacro="CISMacro()" timezone="LOCAL" value="#{d.TeamDetailsUI.team.established}" width="100" />
 </t:row>
 </t:pane>
 </t:row>

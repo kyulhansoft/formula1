@@ -15,7 +15,6 @@
             todir="${projectdeploy}">
     </deploycopyinfo>
 
-    <hotdeploymentpackage
-            name="managedbeans">
-    </hotdeploymentpackage>
+    <hotdeploymentpackage name="managedbeans"></hotdeploymentpackage>
+    <hotdeploymentpackage name="util"></hotdeploymentpackage>
 </project>
