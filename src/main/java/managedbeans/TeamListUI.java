@@ -48,9 +48,9 @@ public class TeamListUI extends PageBean implements Serializable {
         try {
             Team t = (Team)item.getTeam().clone();
             m_teamDetailsUI = new TeamDetailsUI();
-            TeamDetailsUI.IListener listener = new TeamDetailsUI.IListener() {
+            TeamDetailsUI.IListenerSaveCancelDel listener = new TeamDetailsUI.IListenerSaveCancelDel() {
                 @Override
-                public void reactOnOK(Team team) {
+                public void reactOnSave(Team team) {
                     // if OK, then we change the edited row in the grid with same values
                     item.setTeam(t);
                     m_teamDetailsUI = null;
@@ -61,19 +61,13 @@ public class TeamListUI extends PageBean implements Serializable {
                 public void reactOnCancel() {
                     m_teamDetailsUI = null;
                 }
-            };
-            m_teamDetailsUI.prepare(t, listener, new TeamDetailsUI.IListener() {
                 @Override
-                public void reactOnOK(Team team) {
-                    // delete item
+                public void reactOnDelete() {
                     m_grid.getItems().remove(item);
                     m_teamDetailsUI = null;
                 }
-                @Override
-                public void reactOnCancel() {
-                    m_teamDetailsUI = null;
-                }
-            });
+            };
+            m_teamDetailsUI.prepare(t, listener);
             // m_teamDetailsUI.setTeam(item.getTeam());
         } catch (CloneNotSupportedException e) {
             System.out.println(e.getMessage());
@@ -82,9 +76,9 @@ public class TeamListUI extends PageBean implements Serializable {
 
     private void showNewTeamDialog() {
         final TeamDetailsUI teamDetailsUI = new TeamDetailsUI();
-        TeamDetailsUI.IListener listener = new TeamDetailsUI.IListener() {
+        TeamDetailsUI.IListenerSaveCancelDel listener = new TeamDetailsUI.IListenerSaveCancelDel() {
             @Override
-            public void reactOnOK(Team team) {
+            public void reactOnSave(Team team) {
                 Logic logic = new Logic();
                 logic.addTeam(team);
                 closePopup(teamDetailsUI);
@@ -96,16 +90,18 @@ public class TeamListUI extends PageBean implements Serializable {
             public void reactOnCancel() {
                 closePopup(teamDetailsUI);
             }
+            @Override
+            public void reactOnDelete() {}
         };
-        teamDetailsUI.prepare(new Team(), listener, null);
+        teamDetailsUI.prepare(new Team(), listener);
 
-        ModalPopup.IModalPopupListener listener2 = new ModalPopup.IModalPopupListener() {
+        ModalPopup.IModalPopupListener closeListener = new ModalPopup.IModalPopupListener() {
             @Override
             public void reactOnPopupClosedByUser() {
                 closePopup(teamDetailsUI);
             }
         };
-        openModalPopup(teamDetailsUI, "Enter data for new team", 500, 500, listener2);
+        openModalPopup(teamDetailsUI, "Enter data for new team", 500, 500, closeListener);
     }
 
     // ------------------------------------------------------------------------

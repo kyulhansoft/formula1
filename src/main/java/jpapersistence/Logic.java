@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 public class Logic {
 	
@@ -94,4 +95,19 @@ public class Logic {
 		m_em.remove(t);
 		commit();
 	}
+
+	public Team searchTeam(String s) {
+		beginTransaction();
+		String qry = "SELECT t FROM Team t WHERE t.name = ?1";
+		TypedQuery<Team> query = m_em.createQuery(qry, Team.class);
+		Team team = null;
+		try {
+			team = query.setParameter(1, s).getSingleResult();
+		} catch (javax.persistence.NoResultException nre) {
+		}
+		commit();
+		return team;
+	}
+
+
 }

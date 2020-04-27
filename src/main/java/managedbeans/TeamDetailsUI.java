@@ -1,6 +1,8 @@
 package managedbeans;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import jpapersistence.Logic;
 import org.eclnt.editor.annotations.CCGenClass;
@@ -15,6 +17,10 @@ import jpapersistence.Team;
 @CCGenClass (expressionBase="#{d.TeamDetailsUI}")
 
 public class TeamDetailsUI extends PageBean implements Serializable {
+
+    public String getNameBgPaint() { return m_nameBgPaint; }
+    public void setNameBgPaint(String value) { this.m_nameBgPaint = value; }
+
     // String m_name;
     // public String getName() { return m_name; }
     // public void setName(String value) { this.m_name = value; }
@@ -27,18 +33,22 @@ public class TeamDetailsUI extends PageBean implements Serializable {
     // ------------------------------------------------------------------------
     
     /* Listener to the user of the page bean. */
-    public interface IListener {
-        public void reactOnOK(Team team);
+    public interface IListenerSaveCancelDel {
+        public void reactOnSave(Team team);
         public void reactOnCancel();
+        public void reactOnDelete();
     }
     
     // ------------------------------------------------------------------------
     // members
     // ------------------------------------------------------------------------
     
-    private IListener m_listener;
-    private IListener m_deleteListener;
-    String m_btnDelEnabled = "false";
+    //private IListener m_listener;
+    private IListenerSaveCancelDel m_listenerSCD;
+    //private IListener m_deleteListener;
+    private String m_btnDelEnabled = "false";
+    private String m_nameBgPaint;
+    private Map<String, String> m_bgPaints = new HashMap<String, String>();
     
     // ------------------------------------------------------------------------
     // constructors & initialization
@@ -55,25 +65,49 @@ public class TeamDetailsUI extends PageBean implements Serializable {
     // ------------------------------------------------------------------------
 
     /* Initialization of the bean. Add any parameter that is required within your scenario. */
-    public void prepare(Team team, IListener listener, IListener deleteListener) {
+    public void prepare(Team team, IListenerSaveCancelDel listener) {
         this.team = team;
-        m_listener = listener;
-        if (team != null) {
+        m_listenerSCD = listener;
+        if (team.getId() != null) {
             setBtnDelEnabled("true");
         }
-        m_deleteListener = deleteListener;
     }
 
     public void onCancelAction(javax.faces.event.ActionEvent event) {
-        if (m_listener != null) {
-            m_listener.reactOnCancel();
+        if (m_listenerSCD != null) {
+            m_listenerSCD.reactOnCancel();
         }
     }
 
     public void onSaveAction(javax.faces.event.ActionEvent event) {
-        if (m_listener != null) {
-            m_listener.reactOnOK(this.team);
+        m_bgPaints.clear();
+        if (inputNameHasError()) {
+            m_bgPaints.put("nameBgPaint", "error()");
+            Statusbar.outputAlert("Wrong");
+            return;
         }
+        if (inputEstablishedHasError()) {
+            m_bgPaints.put("establishedBgPaint", "error()");
+            Statusbar.outputAlert("Wrong");
+            return;
+        }
+        if (m_listenerSCD != null) {
+            m_listenerSCD.reactOnSave(this.team);
+        }
+    }
+
+    private boolean inputNameHasError() {
+        if (this.team.getName() == null || this.team.getName().equals("")) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean inputEstablishedHasError() {
+        if (this.team.getEstablished() == null || this.team.getEstablished().toString().equals("")) {
+            return true;
+        }
+        return false;
     }
 
     public String getBtnDelEnabled() { return m_btnDelEnabled; }
@@ -87,14 +121,14 @@ public class TeamDetailsUI extends PageBean implements Serializable {
                 public void reactOnYes() {
                     Logic logic = new Logic();
                     logic.deleteTeam(t);
-                    m_deleteListener.reactOnOK(t);
+                    m_listenerSCD.reactOnDelete();
                 }
                 @Override
-                public void reactOnNo() {
-                    Statusbar.outputAlert("NO");
-                }
+                public void reactOnNo() {}
             });
     }
+
+    public Map<String, String> getBgPaints() { return m_bgPaints; }
 
     // ------------------------------------------------------------------------
     // private usage

@@ -3,10 +3,9 @@ package managedbeans;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
+import jpapersistence.Logic;
 import jpapersistence.Team;
 import org.eclnt.editor.annotations.CCGenClass;
 import org.eclnt.jsfserver.pagebean.PageBean;
@@ -106,6 +105,32 @@ public class TestpageUI extends PageBean implements Serializable {
     public void prepare(IListener listener)
     {
         m_listener = listener;
+    }
+
+    public void onTest2Action(javax.faces.event.ActionEvent event) {
+        Logic logic = new Logic();
+
+        Team team = logic.searchTeam("test team");
+        if (team == null) {
+            System.out.println("not found");
+        } else {
+            System.out.println(team.getName());
+        }
+
+        // try {
+        //     Team t2 = (Team)team.clone();
+        //     Logic logic2 = new Logic();
+        //     logic2.deleteTeam(t2);
+        // } catch (CloneNotSupportedException e) {
+        //     e.printStackTrace();
+        // }
+
+        Logic logic3 = new Logic();
+        Team team3 = new Team();
+        team3.setId(team.getId());
+        team3.setName(team.getName());
+        team3.setEstablished(team.getEstablished());
+        logic3.deleteTeam(team3);
     }
 
     // ------------------------------------------------------------------------
