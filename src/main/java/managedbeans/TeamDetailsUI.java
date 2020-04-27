@@ -17,16 +17,8 @@ import jpapersistence.Team;
 @CCGenClass (expressionBase="#{d.TeamDetailsUI}")
 
 public class TeamDetailsUI extends PageBean implements Serializable {
-
-    public String getNameBgPaint() { return m_nameBgPaint; }
-    public void setNameBgPaint(String value) { this.m_nameBgPaint = value; }
-
-    // String m_name;
-    // public String getName() { return m_name; }
-    // public void setName(String value) { this.m_name = value; }
     Team team;
     public Team getTeam() { return team; }
-    //public void setTeam(Team team) { this.team = team; }
 
     // ------------------------------------------------------------------------
     // inner classes
@@ -38,6 +30,39 @@ public class TeamDetailsUI extends PageBean implements Serializable {
         public void reactOnCancel();
         public void reactOnDelete();
     }
+
+    public class ControlInfo {
+        boolean i_hasError = false;
+        String i_tooltip;
+        public String getBgPaint() {
+            if (i_hasError) return "error()";
+            return null;
+        }
+        public String getBorder() {
+            if (i_hasError) return "bottom:2;color:#538135";
+            return null;
+        }
+        public String getTooltip() {
+            if (i_hasError) return i_tooltip;
+            return null;
+        }
+        public void indicateError(String tooltip) {
+            i_hasError = true;
+            i_tooltip = tooltip;
+        }
+    }
+
+    public class CisMap extends HashMap<String, ControlInfo> {
+        @Override
+        public ControlInfo get(Object key) {
+            ControlInfo result = super.get(key);
+            if (result == null) {
+                result = new ControlInfo();
+                put((String)key, result);
+            }
+            return result;
+        }
+    }
     
     // ------------------------------------------------------------------------
     // members
@@ -48,7 +73,7 @@ public class TeamDetailsUI extends PageBean implements Serializable {
     //private IListener m_deleteListener;
     private String m_btnDelEnabled = "false";
     private String m_nameBgPaint;
-    private Map<String, String> m_bgPaints = new HashMap<String, String>();
+    private CisMap m_cis = new CisMap();
     
     // ------------------------------------------------------------------------
     // constructors & initialization
@@ -63,6 +88,8 @@ public class TeamDetailsUI extends PageBean implements Serializable {
     // ------------------------------------------------------------------------
     // public usage
     // ------------------------------------------------------------------------
+
+    public CisMap getCis() { return m_cis; }
 
     /* Initialization of the bean. Add any parameter that is required within your scenario. */
     public void prepare(Team team, IListenerSaveCancelDel listener) {
@@ -80,14 +107,16 @@ public class TeamDetailsUI extends PageBean implements Serializable {
     }
 
     public void onSaveAction(javax.faces.event.ActionEvent event) {
-        m_bgPaints.clear();
+        for (ControlInfo ci : m_cis.values()) {
+            ci.i_hasError = false;
+        }
         if (inputNameHasError()) {
-            m_bgPaints.put("nameBgPaint", "error()");
+            m_cis.get("name").indicateError("Please input Name");
             Statusbar.outputAlert("Wrong");
             return;
         }
         if (inputEstablishedHasError()) {
-            m_bgPaints.put("establishedBgPaint", "error()");
+            m_cis.get("established").indicateError("Please input date of established");
             Statusbar.outputAlert("Wrong");
             return;
         }
@@ -128,7 +157,7 @@ public class TeamDetailsUI extends PageBean implements Serializable {
             });
     }
 
-    public Map<String, String> getBgPaints() { return m_bgPaints; }
+
 
     // ------------------------------------------------------------------------
     // private usage
