@@ -39,7 +39,7 @@ public class TeamDetailsUI extends PageBean implements Serializable {
             return null;
         }
         public String getBorder() {
-            if (i_hasError) return "bottom:2;color:#538135";
+            if (i_hasError) return "left:2;color:#c55a11";
             return null;
         }
         public String getTooltip() {

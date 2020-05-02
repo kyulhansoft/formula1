@@ -125,12 +125,12 @@ public class TestpageUI extends PageBean implements Serializable {
         //     e.printStackTrace();
         // }
 
-        Logic logic3 = new Logic();
-        Team team3 = new Team();
-        team3.setId(team.getId());
-        team3.setName(team.getName());
-        team3.setEstablished(team.getEstablished());
-        logic3.deleteTeam(team3);
+        // Logic logic3 = new Logic();
+        // Team team3 = new Team();
+        // team3.setId(team.getId());
+        // team3.setName(team.getName());
+        // team3.setEstablished(team.getEstablished());
+        // logic3.deleteTeam(team3);
     }
 
     // ------------------------------------------------------------------------
